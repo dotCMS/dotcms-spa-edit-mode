@@ -14,11 +14,12 @@ import { StaticRouter } from 'react-router-dom';
 import DotCMSApi from '../../src/libs/dotcms.api';
 import App from '../../src/App';
 
+const {protocol, hostname, port} = url.parse(process.env.REACT_APP_DOTCMS_HOST);
 const proxy = httpProxy.createProxyServer({
     target: {
-        protocol: 'https:',
-        host: url.parse(process.env.REACT_APP_DOTCMS_HOST).hostname,
-        port: 443,
+        protocol: protocol,
+        host: hostname,
+        port: port,
         pfx: fs.readFileSync('./backend/server/fakecert.txt'),
         passphrase:
             'atProxyServer.28039964-5615-4ccf-bb96-ded62adbcc6a28039964-5615-4ccf-bb96-ded62adbcc6a'
