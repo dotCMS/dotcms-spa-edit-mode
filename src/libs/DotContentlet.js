@@ -7,7 +7,7 @@ const DotContelet = (props) => {
             data-dot-inode={props.inode}
             data-dot-identifier={props.identifier}
             data-dot-type={props.contentType}
-            data-dot-basetype={props.dotBasetype}
+            data-dot-basetype={props.baseType}
             data-dot-lang={props.dotLang}
             data-dot-title={props.title}
             data-dot-can-edit={props.dotCanEdit || true}

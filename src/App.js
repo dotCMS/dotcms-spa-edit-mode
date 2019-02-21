@@ -76,7 +76,8 @@ class PageFetchWrapper extends Component {
                 page,
                 pathname: this.props.location.pathname,
                 mode: viewAs ? viewAs.mode : '',
-                site: this.props.site
+                site: this.props.site,
+                title: page ? page.title : ''
             });
         } else {
             this.setPage(this.props.location.pathname);
