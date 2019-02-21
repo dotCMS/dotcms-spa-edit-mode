@@ -2,22 +2,24 @@ import React, { Component } from 'react';
 import Loadable from 'react-loadable';
 
 import { Spinner } from 'reactstrap';
-
 import DotContentlet from '../libs/DotContentlet';
-import CantRender from './CantRender';
-
+import SimpleWidget from './DotCMS/SimpleWidget';
 import PageContext from '../PageContext';
+import CantRender from './CantRender';
 
 const Loading = (props) => {
     const divStyle = {
         textAlign: 'center',
         padding: '2rem'
     };
-
     return props.error ? (
-        <CantRender color="warning" title={props.contentlet.title}>
-            <p>{props.error.message}</p>
-        </CantRender>
+        props.contentlet.baseType === 'WIDGET' ? (
+            <SimpleWidget identifier={props.contentlet.identifier} />
+        ) : (
+            <CantRender color="warning" title={props.contentlet.title}>
+                <p>{props.error.message}</p>
+            </CantRender>
+        )
     ) : (
         <div style={divStyle}>
             <Spinner color="primary" />

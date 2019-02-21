@@ -91,6 +91,12 @@ const emitCustomEvent = (eventName, eventData) => {
     window.top.document.dispatchEvent(customEvent);
 };
 
+const getWidgetHtml = (identifier) => {
+    return request({
+        url: `${process.env.REACT_APP_DOTCMS_HOST}/api/widget/id/` + identifier
+    }).then((response) => response.text());
+};
+
 export default {
     auth: {
         login,
@@ -98,9 +104,10 @@ export default {
         isLogin
     },
     page: {
-        translate,
+        emitCustomEvent,
         get,
-        emitCustomEvent
+        getWidgetHtml,
+        translate
     },
     sites: {
         getCurrentSite

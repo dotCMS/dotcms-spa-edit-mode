@@ -1,31 +1,25 @@
 import React, { Component } from 'react';
-import dotcmsApi from '../../libs/dotcms.api';
+import DotCMSApi from '../../libs/dotcms.api';
 
 export default class SimpleWidget extends Component {
     state = {
-        widgetCode:'test'
+        widgetCode: ''
     };
 
     componentDidMount() {
-        dotcmsApi.request({
-            url: `${process.env.REACT_APP_DOTCMS_HOST}/api/widget/id/` + this.props.identifier
-        })
-        .then(response =>  response.text())
-        .then(text => {
+        DotCMSApi.page.getWidgetHtml(this.props.identifier).then((content) => {
             this.setState({
                 ...this.state,
-                widgetCode: text
+                widgetCode: content
             });
- 
-        })
+        });
     }
+
     render() {
         return (
             <div className="widget">
-                
                 <div dangerouslySetInnerHTML={{ __html: this.state.widgetCode }} />
                 <h6>{this.props.widgetTitle}</h6>
-                
             </div>
         );
     }
