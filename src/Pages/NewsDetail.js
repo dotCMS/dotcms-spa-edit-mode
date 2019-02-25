@@ -10,9 +10,10 @@ class NewsDetailPage extends React.Component {
         this.state = props.location.state ? props.location.state.news : null;
     }
 
-    getNews() {
+    async getNews() {
         DotCMSApi.esSearch('news', {
-            detailedSearchQuery: `+News.urlTitle:${this.props.match.params.slug}`
+            detailedSearchQuery: `+News.urlTitle:${this.props.match.params.slug.split('?')[0]}`,
+            languageId: await DotCMSApi.languages.getId(window.location.search)
         })
             .then((response) => response.json())
             .then((newsData) => {
@@ -28,7 +29,10 @@ class NewsDetailPage extends React.Component {
 
     render() {
         return (
-            <Layout {...{ header: true, footer: true }} title={this.state ? this.state.title : ''}>
+            <Layout
+                {...{ header: true, footer: true }}
+                title={this.state && this.state.news ? this.state.news.title : ''}
+            >
                 <NewsDetail {...this.state} />
             </Layout>
         );

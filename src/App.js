@@ -27,33 +27,34 @@ class PageFetchWrapper extends Component {
             error: null,
             layout: null,
             mode: null,
-            pathname: null,
+            location: null,
             title: ''
         };
     }
 
     doesUrlChange(nextProps, prevState) {
-        return prevState.pathname && nextProps.location.pathname !== prevState.pathname;
+        return prevState.location.pathname && nextProps.location.pathname !== prevState.location.pathname;
     }
 
-    setPage(pathname) {
+    setPage(location) {
         const isEditModeFromDotCMS = this.props.page && this.props.page.remoteRendered;
 
         if (isEditModeFromDotCMS) {
-            DotCMSApi.page.emitCustomEvent('remote-render-edit', { pathname });
+            DotCMSApi.page.emitCustomEvent('remote-render-edit', { pathname: location.pathname });
             return;
         }
 
         DotCMSApi.page
             .get({
-                pathname: pathname
+                langCode: DotCMSApi.languages.getCode(location.search),
+                pathname: location.pathname
             })
             .then(({ layout, error, viewAs, page }) => {
                 this.setState({
                     error: error,
-                    layout: layout,
+                    layout,
                     mode: viewAs ? viewAs.mode : '',
-                    pathname: pathname,
+                    location,
                     title: page ? page.title : ''
                 });
             });
@@ -61,7 +62,7 @@ class PageFetchWrapper extends Component {
 
     shouldComponentUpdate(nextProps, prevState) {
         if (this.doesUrlChange(nextProps, prevState)) {
-            this.setPage(nextProps.location.pathname);
+            this.setPage(nextProps.location);
         }
 
         return true;
@@ -74,13 +75,13 @@ class PageFetchWrapper extends Component {
                 ...this.state,
                 layout,
                 page,
-                pathname: this.props.location.pathname,
+                location: this.props.location,
                 mode: viewAs ? viewAs.mode : '',
                 site: this.props.site,
                 title: page ? page.title : ''
             });
         } else {
-            this.setPage(this.props.location.pathname);
+            this.setPage(this.props.location);
         }
     }
 
@@ -94,15 +95,13 @@ class PageFetchWrapper extends Component {
                     site: this.state.site
                 }}
             >
-                {layout ? (
-                    <Layout {...layout} title={this.state.title}>
-                        {this.state.error === ERROR_UNAUTHORIZED_USER ? (
-                            <NoAuth />
-                        ) : (
-                            <Page {...layout} />
-                        )}
-                    </Layout>
-                ) : null}
+                <Layout {...layout} title={this.state.title}>
+                    {this.state.error === ERROR_UNAUTHORIZED_USER ? (
+                        <NoAuth />
+                    ) : (
+                        <Page {...layout} />
+                    )}
+                </Layout>
             </PageContext.Provider>
         );
     }

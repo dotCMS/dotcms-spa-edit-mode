@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavItem, NavLink } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import ItemLink from '../Shared/ItemLink';
 
-const NavOption = ({ item }) => {
+const NavOption = ({item}) => {
     return (
         <NavItem key={item.folder}>
-            <NavLink className="nav-option" tag={Link} active={item.href === window.location.pathname} to={item.href}>
+            <NavLink
+                className="nav-option"
+                tag={ItemLink}
+                active={item.href === window.location.pathname}
+                pathname={item.href}
+            >
                 {item.title}
             </NavLink>
         </NavItem>

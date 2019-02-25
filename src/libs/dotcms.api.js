@@ -1,11 +1,14 @@
 const { login, isLogin, logout } = require('./dotcms.auth');
 const { getCurrentSite } = require('./dotcms.sites');
 const { esSearch } = require('./dotcms.esSearch');
+const { getId, getCode } = require('./dotcms.languages');
 const fetch = require('node-fetch');
 
-const getUrl = (pathname) => {
+const getUrl = async (langCode, pathname) => {
+    const langId = await getId(langCode);
     const host = process.env.NODE_ENV !== 'development' ? process.env.REACT_APP_DOTCMS_HOST : '';
-    return `${host}/api/v1/page/json/${pathname.slice(1)}?language_id=1`;
+    const url = `${host}/api/v1/page/json/${pathname.slice(1)}`;
+    return langId ? `${url}?language_id=${langId}` : url;
 };
 
 const translate = (page) => {
@@ -58,8 +61,8 @@ const request = ({ url, method, body }) => {
     });
 };
 
-const get = async ({ pathname }) => {
-    const url = getUrl(pathname);
+const get = async ({ langCode, pathname }) => {
+    const url = await getUrl(langCode, pathname);
 
     return request({ url })
         .then((data) => {
@@ -91,6 +94,16 @@ const emitCustomEvent = (eventName, eventData) => {
     window.top.document.dispatchEvent(customEvent);
 };
 
+const getConfiguration = () => {
+    return request({
+        url: `${process.env.REACT_APP_DOTCMS_HOST}/api/v1/configuration`
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            return data.entity;
+        });
+};
+
 const getWidgetHtml = (identifier) => {
     return request({
         url: `${process.env.REACT_APP_DOTCMS_HOST}/api/widget/id/` + identifier
@@ -103,6 +116,10 @@ export default {
         logout,
         isLogin
     },
+    languages: {
+        getId,
+        getCode,
+    },
     page: {
         emitCustomEvent,
         get,
@@ -113,5 +130,6 @@ export default {
         getCurrentSite
     },
     esSearch,
+    getConfiguration,
     request
 };

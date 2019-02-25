@@ -23,8 +23,8 @@ exports[`<NavDropDown /> renders NavOption correctly 1`] = `
     <DropdownItem
       active={false}
       key="0"
+      pathname="/videos"
       tag={[Function]}
-      to="/videos"
       toggle={true}
     >
       Videos
@@ -32,8 +32,8 @@ exports[`<NavDropDown /> renders NavOption correctly 1`] = `
     <DropdownItem
       active={false}
       key="1"
+      pathname="/blog"
       tag={[Function]}
-      to="/blog"
       toggle={true}
     >
       Blog

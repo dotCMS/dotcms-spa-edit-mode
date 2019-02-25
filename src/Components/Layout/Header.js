@@ -9,7 +9,7 @@ const Header = (props) => {
     return (
         <>
             <Navbar tag="header" className="header__menu container" expand="md">
-                <NavbarBrand className="header__brand-logo" tag={Link} to='/'>
+                <NavbarBrand className="header__brand-logo" tag={Link} to="/">
                     DotCMS - SPA
                 </NavbarBrand>
                 <Nav />

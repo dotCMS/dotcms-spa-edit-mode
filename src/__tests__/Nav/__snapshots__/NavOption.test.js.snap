@@ -8,8 +8,8 @@ exports[`<NavOption /> renders NavOption correctly 1`] = `
   <NavLink
     active={false}
     className="nav-option"
+    pathname="/about"
     tag={[Function]}
-    to="/about"
   >
     About Us
   </NavLink>

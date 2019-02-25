@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import ItemLink from '../Shared/ItemLink';
 
 const NavDropDown = ({ options }) => {
     return (
@@ -13,8 +13,8 @@ const NavDropDown = ({ options }) => {
                 {options.children.map((subItem, index) => {
                     return (
                         <DropdownItem
-                            tag={Link}
-                            to={subItem.href}
+                            tag={ItemLink}
+                            pathname={subItem.href}
                             active={subItem.href === window.location.pathname}
                             key={index}
                         >

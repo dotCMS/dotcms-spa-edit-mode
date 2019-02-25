@@ -19,7 +19,7 @@ exports[`<NewsDetailPage /> renders NewsDetailPage correctly with NO Api fetch 1
 <Layout
   footer={true}
   header={true}
-  title="The Gas Price Rollercoaster"
+  title=""
 >
   <NewsDetail
     baseType="CONTENT"
