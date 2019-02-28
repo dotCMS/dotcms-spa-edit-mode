@@ -15,10 +15,12 @@ const Loading = (props) => {
     return props.error ? (
         props.contentlet.baseType === 'WIDGET' ? (
             <SimpleWidget identifier={props.contentlet.identifier} />
-        ) : (
+        ) : props.showContentletWarning ? (
             <CantRender color="warning" title={props.contentlet.title}>
                 <p>{props.error.message}</p>
             </CantRender>
+        ) : (
+            ''
         )
     ) : (
         <div style={divStyle}>
@@ -36,10 +38,13 @@ export default class Contentlet extends Component {
         //console.log(this.props.data.baseType)
         const Component = Loadable({
             loader: () => import(`./DotCMS/${this.props.data.contentType}`),
-            loading: (props) =>
-                showLoadableContentletWarning ? (
-                    <Loading contentlet={this.props.data} {...props} />
-                ) : null
+            loading: (props) => (
+                <Loading
+                    contentlet={this.props.data}
+                    showContentletWarning={showLoadableContentletWarning}
+                    {...props}
+                />
+            )
         });
         const isEditModeFromDotCMS = isEditMode && this.context.page && this.context.page.remoteRendered;
 
