@@ -14,7 +14,7 @@ import { StaticRouter } from 'react-router-dom';
 import DotCMSApi from '../../src/libs/dotcms.api';
 import App from '../../src/App';
 
-const {protocol, hostname, port} = url.parse(process.env.REACT_APP_DOTCMS_HOST);
+const { protocol, hostname, port } = url.parse(process.env.REACT_APP_DOTCMS_HOST);
 const proxy = httpProxy.createProxyServer({
     target: {
         protocol: protocol,
@@ -38,13 +38,14 @@ const isThisAPage = (pathname) => {
 
 const getScript = (payload) => {
     const { rendered, ...page } = payload.page || {};
+    const { layout, viewAs } = payload || {};
 
     if (payload) {
         return `
         <script type="${mimeType['.js']}">
             var dotcmsPage = ${JSON.stringify({
-                layout: payload.layout,
-                viewAs: payload.viewAs,
+                layout,
+                viewAs,
                 page,
                 site: currentSite
             })}
@@ -57,11 +58,19 @@ const getScript = (payload) => {
 const getMainComponent = (url, payload) => {
     const modules = [];
     const context = {};
+    const { layout, viewAs, page } = payload || {};
     return (
         <Loadable.Capture report={(moduleName) => modules.push(moduleName)}>
             <StaticRouter location={url} context={context}>
                 {payload ? (
-                    <App layout={payload.layout} {...payload.viewAs} {...payload.page} />
+                    <App
+                        payload={{
+                            layout,
+                            viewAs,
+                            page,
+                            site: currentSite
+                        }}
+                    />
                 ) : (
                     <App />
                 )}

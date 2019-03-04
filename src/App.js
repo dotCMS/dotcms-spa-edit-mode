@@ -37,7 +37,7 @@ class PageFetchWrapper extends Component {
     }
 
     setPage(location) {
-        const isEditModeFromDotCMS = this.props.page && this.props.page.remoteRendered;
+        const isEditModeFromDotCMS = this.props.payload && this.props.payload.page && this.props.payload.page.remoteRendered;
 
         if (isEditModeFromDotCMS) {
             DotCMSApi.page.emitCustomEvent('remote-render-edit', { pathname: location.pathname });
@@ -69,15 +69,15 @@ class PageFetchWrapper extends Component {
     }
 
     componentDidMount() {
-        const { layout, viewAs, page } = this.props;
-        if (layout) {
+        const { layout, viewAs, page, site } = this.props.payload || {};
+        if (this.props.payload) {
             this.setState({
                 ...this.state,
                 layout,
                 page,
                 location: this.props.location,
                 mode: viewAs ? viewAs.mode : '',
-                site: this.props.site,
+                site,
                 title: page ? page.title : ''
             });
         } else {
@@ -86,7 +86,8 @@ class PageFetchWrapper extends Component {
     }
 
     render() {
-        const { layout } = this.state || this.props;
+        const { layout } = this.state || this.props.payload;
+
         return (
             <PageContext.Provider
                 value={{
