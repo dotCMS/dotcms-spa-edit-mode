@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Nav as BootstrapNav, NavbarToggler, Collapse } from 'reactstrap';
-import DotCMSApi from '../../libs/dotcms.api';
+
+import dotcmsApi from '../../dotcmsApi';
+
 import PageContext from '../../PageContext';
 import NavOption from '../../Components/Nav/NavOption';
 import NavDropDown from './NavDropDown';
@@ -11,47 +13,41 @@ export default class Nav extends Component {
     static contextType = PageContext;
     state = {
         collapsed: false,
-        showLogin: false,
         items: []
     };
 
     componentDidMount() {
-        DotCMSApi.request({
-            url: `${process.env.REACT_APP_DOTCMS_HOST}/api/v1/nav//?depth=3`
-        })
-            .then(response => response.json())
-            .then(data => data.entity.children)
-            .then(data => {
+        dotcmsApi.nav
+            .get('3')
+            .then((data) => data.children)
+            .then((items) => {
                 this.setState({
                     ...this.state,
-                    items: data
+                    items
                 });
             })
-            .catch(e => console.error(`.catch(${e})`));
+            .catch((e) => console.error(e.message));
     }
 
-    toggleCollapsed = e => {
+    toggleCollapsed = (e) => {
         this.setState({
             ...this.state,
             collapsed: !this.state.collapsed
         });
     };
 
-    toggleLogin = e => {
-        this.setState({
-            ...this.state,
-            showLogin: !this.state.showLogin
-        });
-    };
-
     render() {
         // TODO: Check why context does not has initial values
-        const isEditModeFromDotCMS = this.context && this.context.mode && this.context.mode === 'EDIT_MODE';
-        const remoteRendered = this.context && this.context.page && this.context.page.remoteRendered;
+        const isEditModeFromDotCMS =
+            this.context && this.context.mode && this.context.mode === 'EDIT_MODE';
+        const remoteRendered =
+            this.context && this.context.page && this.context.page.remoteRendered;
 
         return (
             <>
-                <NavbarToggler className="nav-menu__toggle-button" onClick={this.toggleCollapsed} >&#9776;</NavbarToggler>
+                <NavbarToggler className="nav-menu__toggle-button" onClick={this.toggleCollapsed}>
+                    &#9776;
+                </NavbarToggler>
                 <Collapse className="nav-menu__links" isOpen={this.state.collapsed} navbar>
                     <BootstrapNav navbar>
                         {this.state.items.map((item) => {
@@ -63,7 +59,7 @@ export default class Nav extends Component {
                         })}
                     </BootstrapNav>
                 </Collapse>
-                {remoteRendered && isEditModeFromDotCMS ? (<NavSort />) : ''}
+                {remoteRendered && isEditModeFromDotCMS ? <NavSort /> : ''}
             </>
         );
     }

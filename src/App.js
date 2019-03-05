@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-
 import { Route, Switch } from 'react-router-dom';
 
 import Page from './Page';
 import { Layout } from './Components/Layout';
 import CantRender from './Components/CantRender';
 import NewsDetailPage from './Pages/NewsDetail';
-
-import DotCMSApi from './libs/dotcms.api';
 import PageContext from './PageContext';
 
-const ERROR_UNAUTHORIZED_USER = '400';
+import transformPage from './utils/transformPage';
+import dotcmsApi from './dotcmsApi';
+
+import getLangCode from './utils/getLangCode';
+
+const ERROR_UNAUTHORIZED_USER = 400;
 
 const NoAuth = () => (
     <CantRender title="Invalid Authorization Token" color="warning">
@@ -24,38 +26,52 @@ class PageFetchWrapper extends Component {
     constructor() {
         super();
         this.state = {
-            error: null,
-            layout: null,
-            mode: null,
-            location: null,
+            error: '',
+            layout: {},
+            mode: {},
+            location: {},
             title: ''
         };
     }
 
     doesUrlChange(nextProps, prevState) {
-        return prevState.location.pathname && nextProps.location.pathname !== prevState.location.pathname;
+        return (
+            prevState.location.pathname &&
+            nextProps.location.pathname !== prevState.location.pathname
+        );
     }
 
     setPage(location) {
         const isEditModeFromDotCMS = this.props.payload && this.props.payload.page && this.props.payload.page.remoteRendered;
 
         if (isEditModeFromDotCMS) {
-            DotCMSApi.page.emitCustomEvent('remote-render-edit', { pathname: location.pathname });
+            dotcmsApi.event.emit({
+                name: 'remote-render-edit',
+                data: { pathname: location.pathname }
+            });
             return;
         }
 
-        DotCMSApi.page
+        dotcmsApi.page
             .get({
-                langCode: DotCMSApi.languages.getCode(location.search),
-                pathname: location.pathname
+                language: getLangCode(location.search),
+                url: location.pathname
             })
-            .then(({ layout, error, viewAs, page }) => {
+            .then((pageAsset) => {
+                const { layout, error, viewAs, page } = transformPage(pageAsset);
+
                 this.setState({
                     error: error,
                     layout,
                     mode: viewAs ? viewAs.mode : '',
                     location,
                     title: page ? page.title : ''
+                });
+            })
+            .catch((err) => {
+                this.setState({
+                    ...this.state,
+                    error: err.status
                 });
             });
     }

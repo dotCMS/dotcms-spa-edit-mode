@@ -3,7 +3,8 @@ import { Spinner } from 'reactstrap';
 import NewsList from '../News/NewsList';
 import NoResults from '../Shared/NoResults';
 import Pagination from '../Shared/Pagination';
-import DotCMSApi from '../../libs/dotcms.api';
+import getLangCode from '../../utils/getLangCode';
+import dotcmsApi from '../../dotcmsApi';
 
 const sortResultsByMap = {
     title: 'title_dotraw',
@@ -25,7 +26,8 @@ class NewsWidget extends React.Component {
     }
 
     async getNewsItems(pagination) {
-        const langId = await DotCMSApi.languages.getId(window.location.search);
+        const langId = await dotcmsApi.language.getId(getLangCode(window.location.search));
+
         const defaultEsParams = {
             itemsPerPage: this.props.itemsPerPage,
             languageId: langId || this.props.languageId,
@@ -35,20 +37,23 @@ class NewsWidget extends React.Component {
             sortResultsBy: sortResultsByMap[this.props.sortResultsBy]
         };
 
-        DotCMSApi.esSearch('news', {
-            ...pagination,
-            ...defaultEsParams
-        })
-            .then((response) => response.json())
-            .then((newsData) => {
+        dotcmsApi.esSearch
+            .search({
+                contentType: 'news',
+                queryParams: {
+                    ...pagination,
+                    ...defaultEsParams
+                }
+            })
+            .then((result) => {
                 this.setState((state) => ({
                     ...state,
                     loading: false,
                     pagination: {
                         ...pagination,
-                        totalItems: newsData.esresponse[0].hits.total
+                        totalItems: result.esresponse[0].hits.total
                     },
-                    news: newsData.contentlets
+                    news: result.contentlets
                 }));
             });
     }

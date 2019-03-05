@@ -1,7 +1,9 @@
 import React from 'react';
-import DotCMSApi from '../libs/dotcms.api';
 import { Layout } from '../Components/Layout';
 import NewsDetail from '../Components/News/NewsDetail';
+import getLangCode from '../utils/getLangCode';
+import dotcmsApi from '../dotcmsApi';
+
 import './NewsDetail.css';
 
 class NewsDetailPage extends React.Component {
@@ -11,11 +13,13 @@ class NewsDetailPage extends React.Component {
     }
 
     async getNews() {
-        DotCMSApi.esSearch('news', {
-            detailedSearchQuery: `+News.urlTitle:${this.props.match.params.slug.split('?')[0]}`,
-            languageId: await DotCMSApi.languages.getId(window.location.search)
+        dotcmsApi.esSearch.search({
+            contentType: 'news',
+            queryParams: {
+                detailedSearchQuery: `+News.urlTitle:${this.props.match.params.slug.split('?')[0]}`,
+                languageId: await dotcmsApi.language.getId(getLangCode(window.location.search))
+            }
         })
-            .then((response) => response.json())
             .then((newsData) => {
                 this.setState((state) => newsData.contentlets[0]);
             });

@@ -1,8 +1,9 @@
 import React from 'react';
-import DotCMSApi from '../../libs/dotcms.api';
 import { Spinner } from 'reactstrap';
 import NoResults from '../Shared/NoResults';
 import BannerCarousel from '../BannerCarousel';
+
+import dotcmsApi from '../../dotcmsApi';
 
 const sortResultsByMap = {
     title: 'title_dotraw',
@@ -19,7 +20,7 @@ class Bannercarouselwidgets extends React.Component {
     }
 
     formatBannersData(banners) {
-        return banners.map(banner => {
+        return banners.map((banner) => {
             return {
                 src: banner.imageVersion,
                 altText: banner.title,
@@ -37,10 +38,14 @@ class Bannercarouselwidgets extends React.Component {
             sortResultsBy: sortResultsByMap[this.props.sortResultsBy]
         };
 
-        DotCMSApi.esSearch('banner', defaultEsParams)
-            .then(response => response.json())
-            .then(bannerData => {
-                this.setState(state => ({
+        dotcmsApi.esSearch
+            .search({
+                contentType: 'banner',
+                queryParams: defaultEsParams
+            })
+            .then((response) => response.json())
+            .then((bannerData) => {
+                this.setState((state) => ({
                     ...state,
                     loading: false,
                     banners: this.formatBannersData(bannerData.contentlets)
@@ -58,10 +63,7 @@ class Bannercarouselwidgets extends React.Component {
             return <Spinner color="primary" />;
         } else {
             return banners && banners.length ? (
-                <BannerCarousel
-                    items={banners}
-                    fieldsToDisplay={this.props.fieldsToDisplay}
-                />
+                <BannerCarousel items={banners} fieldsToDisplay={this.props.fieldsToDisplay} />
             ) : (
                 <NoResults />
             );

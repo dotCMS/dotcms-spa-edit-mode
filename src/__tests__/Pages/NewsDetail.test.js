@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import toJSON from 'enzyme-to-json';
-import DotCMSApi from '../../libs/dotcms.api';
 import NewsDetailPage from '../../Pages/NewsDetail';
 import { newsMock } from '../../TestUtils/news';
 import wait from 'waait';
+import dotCMSApi from '../../dotcmsApi';
 
 describe('<NewsDetailPage />', () => {
     let newsSearchData;
@@ -29,19 +29,13 @@ describe('<NewsDetailPage />', () => {
             ]
         };
 
-        DotCMSApi.esSearch = jest.fn().mockImplementation(() => {
+        dotCMSApi.esSearch.search = jest.fn().mockImplementation(() => {
             return new Promise((resolve, reject) => {
-                resolve({
-                    status: 200,
-                    json: () =>
-                        new Promise((resolve, reject) => {
-                            resolve(newsSearchData);
-                        })
-                });
+                resolve(newsSearchData);
             });
         });
 
-        DotCMSApi.languages.getId = jest.fn().mockImplementation(() => {
+        dotCMSApi.language.getId = jest.fn().mockImplementation(() => {
             return '1';
         });
     });
@@ -54,7 +48,7 @@ describe('<NewsDetailPage />', () => {
             />
         );
         expect(toJSON(wrapper)).toMatchSnapshot();
-        expect(DotCMSApi.esSearch).not.toHaveBeenCalled();
+        expect(dotCMSApi.esSearch.search).not.toHaveBeenCalled();
     });
 
     it('renders NewsDetailPage correctly with Api fetch', async () => {
@@ -70,10 +64,12 @@ describe('<NewsDetailPage />', () => {
         );
         expect(toJSON(wrapper)).toMatchSnapshot();
         await wait();
-        expect(DotCMSApi.languages.getId).toHaveBeenCalledWith('?lang=en');
-        expect(DotCMSApi.esSearch).toHaveBeenCalledWith('news', {
-            detailedSearchQuery: `+News.urlTitle:${newsMock.urlTitle}`,
-            languageId: '1'
+        expect(dotCMSApi.language.getId).toHaveBeenCalledWith('en');
+        expect(dotCMSApi.esSearch.search).toHaveBeenCalledWith({
+            contentType: 'news', queryParams: {
+                detailedSearchQuery: `+News.urlTitle:${newsMock.urlTitle}`,
+                languageId: '1'
+            }
         });
     });
 });

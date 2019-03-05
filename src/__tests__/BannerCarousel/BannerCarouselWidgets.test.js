@@ -1,8 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import wait from 'waait';
-import DotCMSApi from '../../libs/dotcms.api';
 import BannerCarouselWidgets from '../../Components/DotCMS/BannerCarouselWidgets';
+
+import dotCMSApi from '../../dotcmsApi';
 
 describe('<BannerCarouselWidgets />', () => {
     let wrapper;
@@ -21,7 +22,7 @@ describe('<BannerCarouselWidgets />', () => {
     }
 
     const mockEsSearch = (response) => {
-        DotCMSApi.esSearch = jest.fn().mockImplementation(() => {
+        dotCMSApi.esSearch.search = jest.fn().mockImplementation(() => {
             return new Promise((resolve, reject) => {
                 resolve({
                     status: 200,
@@ -86,7 +87,7 @@ describe('<BannerCarouselWidgets />', () => {
             numberOfResults: bannersPageData.numberOfResults,
         };
 
-        expect(DotCMSApi.esSearch).toHaveBeenCalledWith('banner', fetchParams);
+        expect(dotCMSApi.esSearch.search).toHaveBeenCalledWith({contentType: 'banner', queryParams: fetchParams});
         expect(wrapper.find('NoResults').exists()).toBeFalsy();
 
         const bannerFormatData = formatBannersData(bannerResponseData.contentlets);

@@ -5,13 +5,14 @@ import url from 'url';
 import { parse } from 'querystring';
 import Loadable from 'react-loadable';
 
-import httpProxy from 'http-proxy';
-
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
+import httpProxy from 'http-proxy';
 
-import DotCMSApi from '../../src/libs/dotcms.api';
+import dotcmsApi from '../dotcmsApi';
+import transformPage from '../../src/utils/transformPage';
+
 import App from '../../src/App';
 
 const { protocol, hostname, port } = url.parse(process.env.REACT_APP_DOTCMS_HOST);
@@ -112,7 +113,7 @@ const server = http.createServer((request, response) => {
         request.on('end', function() {
             // Parse the post data and get client sent username and password.
             // let postDataObject = JSON.parse(postData);
-            let payload = DotCMSApi.page.translate(JSON.parse(parse(postData).dotPageData).entity);
+            let payload = transformPage(JSON.parse(parse(postData).dotPageData).entity);
 
             // The post request should have remoteRendered, double check with Will.
             payload = {
@@ -191,7 +192,7 @@ const server = http.createServer((request, response) => {
 
 // We tell React Loadable to load all required assets and start listening.
 Loadable.preloadAll().then(async () => {
-    currentSite = await DotCMSApi.sites.getCurrentSite();
+    currentSite = await dotcmsApi.site.getCurrentSite();
     server.listen(process.env.PORT || 5000, (err) => {
         console.log('Server running http://localhost:5000');
     });

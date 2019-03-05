@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import DotCMSApi from '../../libs/dotcms.api';
 import PageContext from '../../PageContext';
+import dotcmsApi from '../../dotcmsApi';
 
 class NavSort extends Component {
     static contextType = PageContext;
@@ -15,7 +15,11 @@ class NavSort extends Component {
             `&startLevel=1&depth=2&pagePath=${pageUrl}&hostId=${siteId}`
         ].join('');
 
-        DotCMSApi.page.emitCustomEvent('reorder-menu', url);
+        dotcmsApi.event.emit({
+            name: 'reorder-menu',
+            data: url
+        });
+
     }
 
     render() {
