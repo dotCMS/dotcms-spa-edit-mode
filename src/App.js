@@ -86,6 +86,7 @@ class PageFetchWrapper extends Component {
 
     componentDidMount() {
         const { layout, viewAs, page, site } = this.props.payload || {};
+
         if (this.props.payload) {
             this.setState({
                 ...this.state,
@@ -102,7 +103,7 @@ class PageFetchWrapper extends Component {
     }
 
     render() {
-        const { layout } = this.state || this.props.payload;
+        let layout = this.props.payload ? this.props.payload.layout : this.state.layout;
 
         return (
             <PageContext.Provider
