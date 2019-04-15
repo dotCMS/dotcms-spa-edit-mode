@@ -1,4 +1,4 @@
-# SPA with Universial/Isomorphic Rendering
+# React SPA with Universial/Isomorphic Rendering
 This SPA demonstration includes both a traditional client side SPA written in React and a node server that can provide the same application as a server side rendered app.  Unlike traditional Universal SPAs, this SPA listens for HTTP POST methods with a json data payload that contains a `{dotPageData:xx}` property and if that is available, will render the SPA page server side.  This allows the SPA to act as a mirror for when a dotCMS installation wants to proxy the SPA's source to a dotCMS edit mode user. 
 
 ## Setting up the Universal App
