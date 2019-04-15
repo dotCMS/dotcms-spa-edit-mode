@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import dotcmsApi from '../../libs/dotcms.api';
+import dotcmsApi from '../../dotcmsApi';
 
-export default class SimpleWidget extends Component {
+export default class Banner extends Component {
     state = {
         widgetCode:'test'
     };
 
     componentDidMount() {
-        dotcmsApi.request({
+        dotcmsApi.httpClient.request({
             url: `${process.env.REACT_APP_DOTCMS_HOST}/api/content/id/` + this.props.identifier
         })
         .then(response =>  response.json())

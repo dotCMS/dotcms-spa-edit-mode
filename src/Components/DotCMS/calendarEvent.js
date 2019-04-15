@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Moment from 'react-moment';
+import DateFormat from '../Shared/DateFormat';
 
 
 
@@ -20,7 +20,9 @@ export default class calendarEvent extends Component {
             <div className="event">
                 <h2>{this.props.title}</h2>
 
-                <time><b><Moment format="MMM, D">{startDate}</Moment></b>: <Moment format="H:mm">{startDate}</Moment>-<Moment format="H:mm">{endDate}</Moment></time>
+                <b>
+                    <DateFormat dateString={startDate} /></b>
+                    
                 <span dangerouslySetInnerHTML={createMarkup(desc)} />
 
 
