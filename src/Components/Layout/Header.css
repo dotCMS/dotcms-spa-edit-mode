@@ -12,7 +12,7 @@ header.header__menu > button {
     align-items: center;
     background-image: url(../../theme/images/cover_img_1.jpg);
     background-size: cover;
-    background-position: center center;
+
     background-attachment: fixed;
     background-repeat: no-repeat;
     display: flex;
@@ -30,7 +30,7 @@ header.header__menu > button {
     bottom: 0;
     height: var(--header-height);
     left: 0;
-    opacity: 0.95;
+    opacity: 0.5;
     position: absolute;
     right: 0;
     top: 0;
