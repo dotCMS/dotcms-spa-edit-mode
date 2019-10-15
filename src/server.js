@@ -56,18 +56,16 @@ const requestPage = async (req, res) => {
             title: page ? page.title : ''
         };
 
+        renderPage(pageState, req, res);
     } catch(err) {
-        pageState = {
-            ...this.state,
-            error: err.status
-        };
+        if (err.status === 404) {
+            app.render404(req, res);
+        } else {
+            app.renderError(req, res);
+        }
     };
-
-    renderPage(pageState, req, res);
 };
 const requestToDotCMS = async (req, res) => {
-    console.log('req.url', req.url);
-    console.log('isPage(req.url)', isPage(req.url));
     if (isPage(req.url)) {    
         await requestPage(req, res);
     } else {
@@ -88,6 +86,7 @@ app.prepare().then(() => {
                 authorization: 'Basic YWRtaW5AZG90Y21zLmNvbTphZG1pbg=='
             }
         });
+        
         const json = await dotcmsRes.json();
         res.status(dotcmsRes.status).json(json);
     });

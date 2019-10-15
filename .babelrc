@@ -1,0 +1,15 @@
+{
+    "presets": ["next/babel", "@babel/preset-env", "@babel/preset-react"],
+    "plugins": [
+        "transform-class-properties",
+        "@babel/plugin-syntax-dynamic-import",
+        "dynamic-import-node",
+        "react-loadable/babel",
+        [
+            "@babel/plugin-proposal-class-properties",
+            {
+                "loose": true
+            }
+        ]
+    ]
+}

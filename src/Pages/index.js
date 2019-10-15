@@ -4,7 +4,6 @@ import PageContext from '../PageContext';
 import { Layout } from '../Components/Layout';
 
 const Index = ({pageState}) => {
-    console.log('page', pageState);
     return (
         <PageContext.Provider
             value={{
