@@ -59,7 +59,7 @@ const requestPage = async (req, res) => {
         renderPage(pageState, req, res);
     } catch(err) {
         if (err.status === 404) {
-            app.render404(req, res);
+            throw e;
         } else {
             app.renderError(req, res);
         }
@@ -115,6 +115,7 @@ app.prepare().then(() => {
                 await requestToDotCMS(req, res);
             }
         } catch(e) {
+            console.log('err', e);
             handleByNext (req, res);
         }
     });
