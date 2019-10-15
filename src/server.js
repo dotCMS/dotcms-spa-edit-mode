@@ -72,6 +72,24 @@ const requestToDotCMS = async (req, res) => {
         await requestDOTCMSStaticFile(req, res);
     } 
 };
+const handleAPIRequest = async (req, res) => {
+    const dotcmsRes = await fetch(`http://demo.dotcms.com${req.url}`, {
+        method: req.method,
+        headers: {
+            'content-type': 'application/json',
+            authorization: 'Basic YWRtaW5AZG90Y21zLmNvbTphZG1pbg=='
+        }
+    });
+    
+    if (dotcmsRes.headers.get('content-type') === 'application/json') {
+        const json = await dotcmsRes.json();
+        res.status(dotcmsRes.status)
+            .json(json);
+    } else {
+        res.status(dotcmsRes.status)
+            .send(await dotcmsRes.text());
+    }
+};
 
 app.prepare().then(() => {
     const server = express();
@@ -79,16 +97,7 @@ app.prepare().then(() => {
     const jsonParser = bodyParser.raw({ type: 'application/x-www-form-urlencoded' });
 
     server.all('/api/*', async (req, res) => {
-        const dotcmsRes = await fetch(`http://demo.dotcms.com${req.url}`, {
-            method: req.method,
-            headers: {
-                'content-type': 'application/json',
-                authorization: 'Basic YWRtaW5AZG90Y21zLmNvbTphZG1pbg=='
-            }
-        });
-        
-        const json = await dotcmsRes.json();
-        res.status(dotcmsRes.status).json(json);
+        handleAPIRequest(req, res);
     });
 
     server.post('*', jsonParser, (req, res) => {
