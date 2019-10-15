@@ -3,8 +3,7 @@ import { Navbar, NavbarBrand, Container as BootstrapContainer } from 'reactstrap
 import { Link } from 'react-router-dom';
 
 import Nav from '../Nav/Nav';
-// TODO:
-//import './Header.css';
+import './Header.css';
 
 const Header = (props) => {
     return (
