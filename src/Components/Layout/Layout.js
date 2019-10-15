@@ -17,7 +17,7 @@ export const Layout = (props) => {
 
     return (
         <>
-            {includeHeader ? <Header title={props.title} /> : null}
+            
             <BootstrapContainer className={contentClass}>
                 {sidebar && !!sidebar.location ? (
                     <LayoutWithSidebar sidebar={sidebar}>{props.children}</LayoutWithSidebar>
@@ -29,3 +29,6 @@ export const Layout = (props) => {
         </>
     );
 };
+
+
+//{includeHeader ? <Header title={props.title} /> : null}

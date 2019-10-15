@@ -1,2 +1,2 @@
 require('../tooling');
-require('./server');
+require('../../src/server');

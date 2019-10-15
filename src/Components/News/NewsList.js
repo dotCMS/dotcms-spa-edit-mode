@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import NewsListItem from './NewsListItem';
+
 import './NewsList.css';
 
 const NewsList = ({ news, fieldsToDisplay }) => {
