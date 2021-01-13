@@ -8,6 +8,11 @@ import { getLocaleHref } from './../utilities/dotcms/locale';
 const RouterLink = ({ href, children, className, ariaLabel }) => {
     const { isEditMode, languageProps: { defaultLanguage } = {} } = useContext(PageContext);
 
+    const { as } = getLocaleHref({
+        as: href,
+        defaultLang: defaultLanguage
+    }) || {}
+
     if (isEditMode) {
         return (
             <a
@@ -24,13 +29,7 @@ const RouterLink = ({ href, children, className, ariaLabel }) => {
     }
 
     return (
-        <Link
-            href={'/[[...slug]]'}
-            as={getLocaleHref({
-                as: href,
-                defaultLang: defaultLanguage
-            })}
-        >
+        <Link href={'/[[...slug]]'} as={as}>
             <a aria-label={ariaLabel} className={className}>
                 {children}
             </a>

@@ -13,7 +13,11 @@ function useTagsFiltered() {
     const [routePath, setRoutePath] = useState('');
 
     useEffect(() => {
-        const { as, url } = getLocaleHref({ url: '/store/category/[slug]', as: routePath });
+        const { as, url } = getLocaleHref({
+            url: '/store/category/[slug]',
+            as: routePath,
+            defaultLang: defaultLanguage
+        });
         routePath && router.push(url, as);
     }, [routePath]);
 

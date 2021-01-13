@@ -90,6 +90,42 @@ const FormWrapper = styled.form`
         -webkit-appearance: button;
         font: inherit; /* 2 */
     }
+
+    dot-form form input[type='text']:focus {
+        border-radius: 3px;
+    }
+    dot-autocomplete {
+        margin: 0 !important;
+    }
+    dot-form form input[type='text'],
+    dot-autocomplete input {
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 0.4rem;
+    }
+
+    dot-textarea textarea {
+        border: 1px solid #ccc;
+        min-height: 250px;
+        border-radius: 3px;
+    }
+
+    dot-binary-upload-button button {
+        padding: 0.4rem 1rem !important;
+        margin-left: 15px !important;
+        border-radius: 3px !important;
+    }
+
+    #label-accept {
+        display: flex;
+        flex-direction: row;
+        margin-right: 10px;
+    }
+
+    .hint-i-agree-to-all-terms-and-conditions-of-travellux-resort-destinations input {
+        margin-top: 5px;
+        margin-left: 15px;
+    }
 `;
 
 const Form = ({ rendered }) => {
